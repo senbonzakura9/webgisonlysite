@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beytepe Quest — Hacettepe Campus Issue Reporter</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🛰️</div>
+      <div>
+        <div class="title">Beytepe Quest</div>
+        <div class="subtitle">Hacettepe Campus Issue Reporter (Ankara • Beytepe)</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="pill" id="pillServer">API: <span id="apiStatus">checking…</span></div>
+      <div class="pill" id="pillUser">User: <span id="whoami">guest</span></div>
+      <button class="btn btn-ghost" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="map-wrap">
+      <div id="map"></div>
+      <div class="map-hud">
+        <div class="hud-title">🎮 Game Mode</div>
+        <div class="hud-row">
+          <div>XP</div>
+          <div class="hud-bar"><div id="xpFill"></div></div>
+          <div id="xpText">0 / 100</div>
+        </div>
+        <div class="hud-tip">
+          <strong>Tip:</strong> Click the map to drop a new report marker.
+        </div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <div class="card-title">Account</div>
+
+        <div id="authGuest">
+          <div class="tabs">
+            <button class="tab active" data-tab="login">Login</button>
+            <button class="tab" data-tab="register">Register</button>
+          </div>
+
+          <div class="tabpane" id="tab-login">
+            <label class="lbl">Username</label>
+            <input class="inp" id="loginUser" placeholder="e.g., ahmed" />
+            <label class="lbl">Password</label>
+            <input class="inp" id="loginPass" type="password" placeholder="••••••••" />
+            <button class="btn btn-primary" id="btnLogin">Login</button>
+            <div class="hint">
+              Demo accounts:
+              <code>admin / admin123</code>,
+              <code>staff / staff123</code>,
+              <code>student / student123</code>
+            </div>
+          </div>
+
+          <div class="tabpane hidden" id="tab-register">
+            <label class="lbl">Username</label>
+            <input class="inp" id="regUser" placeholder="pick a username" />
+            <label class="lbl">Password</label>
+            <input class="inp" id="regPass" type="password" placeholder="min 6 chars" />
+            <label class="lbl">Role</label>
+            <select class="inp" id="regRole">
+              <option value="student">Student</option>
+              <option value="staff">Staff</option>
+            </select>
+            <button class="btn btn-primary" id="btnRegister">Create account</button>
+            <div class="hint">Admin accounts are created by admins only.</div>
+          </div>
+        </div>
+
+        <div id="authAuthed" class="hidden">
+          <div class="kv">
+            <div>Username</div><div id="meName">—</div>
+            <div>Role</div><div id="meRole">—</div>
+          </div>
+        </div>
+
+        <div class="msg" id="authMsg" hidden></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">User Types & Permissions</div>
+        <ul class="ul">
+          <li><strong>Student</strong>: Create + edit <em>own</em> reports</li>
+          <li><strong>Staff</strong>: Update status/assignment for any report</li>
+          <li><strong>Admin</strong>: Manage users + full report access</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Create / Edit Report (Click on map to create marker)</div>
+        <div class="grid2">
+          <div>
+            <label class="lbl">Title</label>
+            <input class="inp" id="fTitle" placeholder="Broken streetlight" />
+          </div>
+          <div>
+            <label class="lbl">Category</label>
+            <select class="inp" id="fCategory">
+              <option>Lighting</option>
+              <option>Road</option>
+              <option>Safety</option>
+              <option>Cleanliness</option>
+              <option>Accessibility</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="lbl">Description</label>
+        <textarea class="inp" id="fDesc" rows="3" placeholder="Describe what you see…"></textarea>
+
+        <div class="grid2">
+          <div>
+            <label class="lbl">Status</label>
+            <select class="inp" id="fStatus">
+              <option value="open">Open</option>
+              <option value="in_progress">In progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">Assign to (staff username)</label>
+            <input class="inp" id="fAssign" placeholder="optional" />
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <label class="lbl">Latitude</label>
+            <input class="inp" id="fLat" placeholder="click map" />
+          </div>
+          <div>
+            <label class="lbl">Longitude</label>
+            <input class="inp" id="fLng" placeholder="click map" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn btn-primary" id="btnSave">Save</button>
+          <button class="btn" id="btnClear">Clear</button>
+          <button class="btn btn-danger hidden" id="btnDelete">Delete</button>
+        </div>
+
+        <div class="hint">
+          You must be logged in to create reports. Students can edit their own reports. Staff/Admin can update status and assignment.
+        </div>
+
+        <div class="msg" id="formMsg" hidden></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Reports</div>
+
+        <div class="filters">
+          <select class="inp" id="fltStatus">
+            <option value="">All statuses</option>
+            <option value="open">Open</option>
+            <option value="in_progress">In progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select class="inp" id="fltCategory">
+            <option value="">All categories</option>
+            <option>Lighting</option>
+            <option>Road</option>
+            <option>Safety</option>
+            <option>Cleanliness</option>
+            <option>Accessibility</option>
+            <option>Other</option>
+          </select>
+          <label class="chk"><input type="checkbox" id="fltMine" /> Mine</label>
+        </div>
+
+        <div class="list" id="list"></div>
+      </div>
+
+      <div class="card hidden" id="adminCard">
+        <div class="card-title">Admin: Users</div>
+        <div class="row">
+          <button class="btn btn-primary" id="btnLoadUsers">Refresh</button>
+        </div>
+        <div class="list" id="usersList"></div>
+        <div class="hint">
+          Admin can create/update/delete users via API. This UI is read-only for simplicity.
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <div>Map © OpenStreetMap contributors • Built with Leaflet • Sample course project</div>
+    <div class="small">Beytepe center is preloaded as the initial map view.</div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+/* Beytepe Quest — single-file UI theme (game-like, minimal dependencies) */
+:root{
+  --bg: #0b1020;
+  --panel: rgba(255,255,255,.06);
+  --panel2: rgba(255,255,255,.08);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.70);
+  --line: rgba(255,255,255,.12);
+  --good: #38d996;
+  --bad: #ff5c7a;
+  --warn: #ffcc66;
+  --accent: #7aa2ff;
+  --shadow: 0 14px 40px rgba(0,0,0,.40);
+  --radius: 16px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--sans);
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(122,162,255,.25), transparent 55%),
+    radial-gradient(1000px 500px at 90% 0%, rgba(56,217,150,.18), transparent 60%),
+    radial-gradient(1200px 900px at 40% 120%, rgba(255,92,122,.12), transparent 55%),
+    var(--bg);
+  color: var(--text);
+}
+
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(11,16,32,.78);
+  backdrop-filter: blur(10px);
+}
+
+.brand{ display:flex; gap:12px; align-items:center; }
+.logo{
+  width:42px; height:42px;
+  border-radius: 14px;
+  display:grid; place-items:center;
+  background: linear-gradient(135deg, rgba(122,162,255,.35), rgba(56,217,150,.25));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.title{ font-weight: 800; letter-spacing:.3px; }
+.subtitle{ font-size: 12px; color: var(--muted); margin-top:2px; }
+
+.top-actions{ display:flex; gap:10px; align-items:center; }
+.pill{
+  padding: 8px 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.btn{
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: 12px;
+  cursor:pointer;
+  transition: transform .06s ease, background .15s ease, border-color .15s ease;
+}
+.btn:hover{ background: var(--panel2); border-color: rgba(255,255,255,.18); }
+.btn:active{ transform: translateY(1px); }
+.btn-primary{
+  background: linear-gradient(135deg, rgba(122,162,255,.42), rgba(56,217,150,.28));
+  border-color: rgba(122,162,255,.45);
+}
+.btn-danger{
+  background: rgba(255,92,122,.18);
+  border-color: rgba(255,92,122,.35);
+}
+.btn-ghost{
+  background: transparent;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  gap: 14px;
+  padding: 14px;
+  min-height: calc(100vh - 66px);
+}
+
+.map-wrap{
+  position: relative;
+  border-radius: var(--radius);
+  overflow:hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+#map{
+  width:100%;
+  height: calc(100vh - 66px - 14px - 14px - 56px);
+  min-height: 560px;
+  background: #111827;
+}
+.map-hud{
+  position:absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 280px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(11,16,32,.72);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+.hud-title{ font-weight: 700; margin-bottom: 8px; }
+.hud-row{
+  display:grid;
+  grid-template-columns: 30px 1fr 70px;
+  align-items:center;
+  gap:10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.hud-bar{
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.12);
+}
+#xpFill{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, rgba(122,162,255,.85), rgba(56,217,150,.85));
+}
+.hud-tip{
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.side{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  padding-right: 2px;
+  height: calc(100vh - 66px - 14px - 14px);
+  overflow:auto;
+}
+
+.card{
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.card-title{
+  font-weight: 800;
+  margin: 4px 2px 10px;
+  letter-spacing:.2px;
+}
+.lbl{
+  display:block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 8px 2px 6px;
+}
+.inp{
+  width:100%;
+  padding: 10px 11px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  color: var(--text);
+  outline: none;
+}
+.inp:focus{
+  border-color: rgba(122,162,255,.55);
+  box-shadow: 0 0 0 3px rgba(122,162,255,.15);
+}
+textarea.inp{ resize: vertical; }
+
+.grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+.row{ display:flex; gap:10px; align-items:center; margin-top: 10px; flex-wrap: wrap; }
+
+.hint{
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.hint code{
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(255,255,255,.08);
+  padding: 1px 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.msg{
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  font-size: 13px;
+  color: var(--muted);
+}
+.msg.good{ border-color: rgba(56,217,150,.30); background: rgba(56,217,150,.12); }
+.msg.bad{ border-color: rgba(255,92,122,.30); background: rgba(255,92,122,.12); }
+
+.tabs{ display:flex; gap:8px; margin-bottom: 10px; }
+.tab{
+  flex:1;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.14);
+  color: var(--muted);
+  cursor:pointer;
+}
+.tab.active{
+  color: var(--text);
+  border-color: rgba(122,162,255,.45);
+  background: rgba(122,162,255,.16);
+}
+
+.ul{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+.ul li{ margin: 8px 0; line-height: 1.35; }
+
+.filters{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+  margin-bottom: 10px;
+}
+.chk{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size: 13px;
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+.chk input{ accent-color: var(--accent); }
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.item{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.14);
+  padding: 10px;
+  cursor:pointer;
+}
+.item:hover{ border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+.item-top{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+.badge{
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--muted);
+}
+.badge.open{ border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.12); color: rgba(255,235,200,.95); }
+.badge.in_progress{ border-color: rgba(122,162,255,.35); background: rgba(122,162,255,.12); color: rgba(215,227,255,.95); }
+.badge.resolved{ border-color: rgba(56,217,150,.35); background: rgba(56,217,150,.12); color: rgba(211,255,237,.95); }
+.badge.rejected{ border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.12); color: rgba(255,210,220,.95); }
+
+.item-title{ font-weight: 800; margin:0 0 2px; }
+.item-meta{ font-size: 12px; color: var(--muted); line-height: 1.35; }
+.small{ font-size: 12px; color: var(--muted); }
+
+.footer{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hidden{ display:none !important; }
+
+@media (max-width: 1100px){
+  .layout{ grid-template-columns: 1fr; }
+  #map{ height: 520px; min-height: 520px; }
+  .side{ height: auto; overflow: visible; }
+}
+
+/* FIX: Select dropdown visibility */
+select,
+option {
+  background-color: #0b1020 !important;
+  color: rgba(255,255,255,.95) !important;
+}
+
+select:focus {
+  background-color: #0b1020 !important;
+}
+
+/* Disable gamemode / XP UI */
+#xpBar,
+#xpFill,
+#xpText {
+  display: none;
+}
+/* Remove Game Mode tip text */
+.hud-tip {
+  display: none !important;
+}
+/* Hide the whole Game Mode HUD block */
+.hud {
+  display: none !important;
+
+}
+/* HARD KILL: Game Mode HUD */
+.hud-title,
+.hud-row,
+.hud-bar,
+#xpText {
+  display: none !important;
+}
+/* Remove entire map HUD (Game Mode container) */
+.map-hud {
+  display: none !important;
+}
+
+
+
