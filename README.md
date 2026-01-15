@@ -1,6 +1,7 @@
 # Beytepe Quest — Hacettepe Campus Issue Reporter (Ankara / Beytepe)
 https://senbonzakura9.github.io/webgisonlysite/ - this link is only for showing the interface no api connections.
 A small  web app for reporting issues on **Hacettepe University Beytepe Campus**.
+Put a marker to show the issue's location on the map and report it with description.
 It demonstrates:
 
 - **Managing different user types**: `student`, `staff`, `admin`
